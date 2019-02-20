@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+    parameters {
+	    choice(name: 'CHOICE',choices:['dev','stg','prd'])
+    }
+
+    environment {
+	    name = 'dalu'
+    }
+
+    options {
+	    timeout(time: 1, unit: 'HOURS')
+	    retry(2)
+    }
+
+    stages {
+	  stage('Checkout') {
+	    steps{
+		  echo 'Checkout blue-test'
+		  checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'xxx', url: 'http://xxx/bule-test.git']]])
+	    }
+	}
+
+     stage('Build') {
+	   parallel {
+	     stage('Build1') {
+		    input {
+			  message "should we continue"
+			  ok "yes,we should"
+		    }
+	          steps {
+                  echo 'Build 1'
+             }
+		}
+		stage('Build2') {
+		    steps {
+			  echo 'Build 2'
+		    }
+		}
+	  }
+    }
+
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+		        echo "$BRANCH_NAME"
+		        echo "$BUILD_ID"
+		        echo "$BUILD_DISPLAY_NAME"
+		        echo "$JOB_NAME"
+		        echo "$BUILD_TAG"
+		        echo "$JENKINS_HOME"
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+	  	        echo "Choice: ${params.CHOICE}"
+		        sh 'tar czvf tt.tgz kafka_tomcat_alter.py'
+            }
+        }
+    }
+    post {
+
+	always {
+	    echo 'i will always run...'
+	}
+    }
+}
