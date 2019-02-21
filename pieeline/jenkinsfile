@@ -23,7 +23,7 @@ pipeline {
 
      stage('Build') {
 	   parallel {
-	     stage('Build1') 
+	     stage('Build1') {
 	          steps {
                   echo 'Build 1'
              }
