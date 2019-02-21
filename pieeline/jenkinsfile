@@ -51,7 +51,7 @@ pipeline {
             steps {
                 echo 'Deploying....'
 	  	        echo "Choice: ${params.CHOICE}"
-		        sh 'tar czvf tt.tgz kafka_tomcat_alter.py'
+		        sh 'push .....'
             }
         }
     }
