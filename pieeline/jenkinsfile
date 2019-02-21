@@ -23,11 +23,7 @@ pipeline {
 
      stage('Build') {
 	   parallel {
-	     stage('Build1') {
-		    input {
-			  message "should we continue"
-			  ok "yes,we should"
-		    }
+	     stage('Build1') 
 	          steps {
                   echo 'Build 1'
              }
